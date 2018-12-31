@@ -1,0 +1,75 @@
+# lasso config
+lasso:
+  logLevel: debug
+  #logLevel: info
+  listen: 0.0.0.0
+  port: 9090
+
+  # domains
+  # each of these domains must serve the url https://lasso.$domains[0] https://lasso.$domains[1] ...
+  # so that the cookie which stores the JWT can be set in the relevant domain
+  # usually you'll just have one.
+  # Comment this out if you set allowAllUser:true
+  domains:
+  - login.auth0.life
+
+  # set allowAllUsers: true to use Lasso to just accept anyone who can authenticate at the configured provider
+  allowAllUsers: true
+
+  # Setting publicAccess: true will accept all requests, even without a cookie.
+  # If the user is logged in, the cookie will be validated and the user header will be set.
+  # You will need to direct people to the Lasso login page from your application.
+  publicAccess: false
+
+  jwt:
+    # secret: a random 18 character string used to cryptographically sign the jwt
+    # if the secret is not set here then..
+    # look for the secret in `./config/secret`
+    # if `./config/secret` doesn't exist then randomly generate a secret and store it there
+    # in order to run multiple instances of lasso on multiple servers (perhaps purely for validating the jwt),
+    # you'll want them all to have the same secret
+    secret: my_hard_random_string
+    issuer: Lasso
+    # number of minutes until jwt expires
+    maxAge: 240
+    # compress the jwt
+    compress: false
+
+  cookie:
+    # name of cookie to store the jwt
+    name: LassoCookie
+    # optionally force the domain of the cookie to set
+    domain: auth0.life
+    secure: true
+    httpOnly: true
+
+  session:
+    # just the name of session variable stored locally
+    name: lassoSession
+
+  headers:
+    jwt: X-Lasso-Token
+    querystring: access_token
+    redirect: X-Lasso-Requested-URI
+
+  db:
+    file: data/lasso_bolt.db
+
+  # testing: force all 302 redirects to be rendered as a webpage with a link
+  testing: false
+
+#
+# OAuth Provider
+#
+oauth:
+  provider: oidc
+  client_id: AUTH0_CLIENT_ID
+  client_secret: AUTH0_CLIENT_SECRET
+  auth_url: https://TENANT.auth0.com/authorize
+  token_url: https://TENANT.auth0.com/oauth/token
+  user_info_url: https://TENANT.auth0.com/userinfo
+  scopes:
+    - openid
+    - email
+    - profile
+  callback_url: https://login.auth0.life/auth

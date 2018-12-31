@@ -1,0 +1,6 @@
+*.tar.gz
+nginx-1.15.8
+*.log
+*.log.*
+nginx.pid
+.idea
