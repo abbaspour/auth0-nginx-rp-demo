@@ -28,7 +28,7 @@ Run
 
 ```bash
 cd lasso
-./
+./lasso
 
 ```       
    
